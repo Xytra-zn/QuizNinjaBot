@@ -1,31 +1,14 @@
-import logging
 from pyrogram import Client, filters
-from motor.motor_asyncio import AsyncIOMotorClient
-from config import API_ID, API_HASH
+from PyroBot.plugins.xytra import users, chats
 
-# Database setup
-MONGO_URL = "mongodb+srv://Mrdaxx123:Mrdaxx123@cluster0.q1da65h.mongodb.net/?retryWrites=true&w=majority"
-MONGO_CLIENT = AsyncIOMotorClient(MONGO_URL)
-MONGO_DB = MONGO_CLIENT['stats']
+@Client.on_message(filters.command(["stats"]))
+async def stats_command(bot, message):
+    # Retrieve and display stats
+    total_chats = await chats.get_served_chats()
+    total_users = await users.get_served_users()
 
-# Define client instance
-app = Client("stats", api_id=API_ID, api_hash=API_HASH)
+    stats_text = f"📊 **Bot Statistics**\n\n"\
+                 f"**Total Chats:** {len(total_chats)}\n"\
+                 f"**Total Users:** {len(total_users)}"
 
-async def add_user(client, message):
-    user_id = message.from_user.id
-    user_name = message.from_user.username
-    
-    await MONGO_DB.users.insert_one({'id': user_id, 'name': user_name})
-
-async def add_chat():
-    await MONGO_DB.chats.insert_one({})
-
-@app.on_message(filters.command("stats"))
-async def get_stats(client, message):
-    total_users = await MONGO_DB.users.count_documents({})
-    total_chats = await MONGO_DB.chats.count_documents({})
-    
-    await message.reply_text(f"Total Users: {total_users}\nTotal Chats: {total_chats}")
-
-    # Increment chat count when /stats is called
-    await add_chat()
+    await bot.send_message(message.chat.id, stats_text)
