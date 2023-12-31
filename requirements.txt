@@ -4,4 +4,3 @@ tgcrypto
 aiogram
 aiohttp
 motor
-pymomgo
