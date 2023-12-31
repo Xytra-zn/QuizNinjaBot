@@ -1,3 +1,6 @@
 pyrogram
 python-decouple
 tgcrypto
+aiogram
+aiohttp
+motor
