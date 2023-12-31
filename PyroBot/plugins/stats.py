@@ -17,9 +17,15 @@ async def add_user(client, message):
     
     await MONGO_DB.users.insert_one({'id': user_id, 'name': user_name})
 
+async def add_chat():
+    await MONGO_DB.chats.insert_one({})
+
 @app.on_message(filters.command("stats"))
 async def get_stats(client, message):
     total_users = await MONGO_DB.users.count_documents({})
     total_chats = await MONGO_DB.chats.count_documents({})
     
     await message.reply_text(f"Total Users: {total_users}\nTotal Chats: {total_chats}")
+
+    # Increment chat count when /stats is called
+    await add_chat()
