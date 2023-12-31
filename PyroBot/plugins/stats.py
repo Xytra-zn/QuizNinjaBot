@@ -5,7 +5,7 @@ from Mickey.database.chats import get_served_chats
 from Mickey.database.users import get_served_users
 
 
-@MickeyBot.on_message(filters.command("stats"))
+@Client.on_message(filters.command("stats"))
 async def stats(cli: Client, message: Message):
     users = len(await get_served_users())
     chats = len(await get_served_chats())
