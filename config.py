@@ -13,5 +13,5 @@ MONGO_URL = os.environ.get('MONGO_URL') or config_data['env']['MONGO_URL']['valu
 OWNER_ID = os.environ.get('OWNER_ID') or config_data['env']['OWNER_ID']['value']
 
 
-mongo = MongoCli(config.MONGO_URL)
+mongo = MongoCli(MONGO_URL)
 db = mongo.Anonymous
