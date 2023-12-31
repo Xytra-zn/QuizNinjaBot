@@ -1,5 +1,6 @@
 import os
 import json
+from motor.motor_asyncio import AsyncIOMotorClient as MongoCli
 
 # Load variables from app.json
 with open('app.json', 'r') as json_file:
