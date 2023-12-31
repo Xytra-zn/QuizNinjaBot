@@ -3,38 +3,39 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 @Client.on_message(filters.command(["start"]))
 async def start_command(bot, message):
-    user = message.from_user
-    bot_name = "𝗤𝗨𝗜𝗭 𝗡𝗜𝗡𝗝𝗔"  # Replace with your bot's name
+    bot_name = "𝗤𝗨𝗜𝗭 𝗡𝗜𝗝𝗔"  # Replace with your bot's name
 
     # Welcome message with inline buttons
-    text = f"Hᴇʏ ᴛʜᴇʀᴇ {user.first_name} ❤️\n"\
+    text = f"Hᴇʏ ᴛʜᴇʀᴇ {message.from_user.first_name} ❤️\n"\
            f"☆ Mʏsᴇʟғ {bot_name}. I ᴀᴍ ᴀɴ Mᴏᴅᴇʀɴ ɪɴᴛᴇʟʟɪɢᴇɴᴄᴇ ʙᴀsᴇᴅ 𝚀𝚄𝙸𝚉 𝙿𝙾𝙻𝙻 𝙱𝚂ᴛ ᴡʜɪᴄʜ ᴄᴀɴ ʙᴇ ᴜsᴇᴅ ᴛᴏ sᴇɴᴅ ᴛʜᴇ ǫᴜɪᴢᴢᴇs ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘꜱ ʙᴀsᴇᴅ ᴏɴ ᴘʀᴇғᴇʀᴇɴᴄᴇs !! ☆\n\n"\
            "✺ Usᴇ /help ᴄᴏᴍᴍᴀɴᴅ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ʟɪsᴛ ᴏғ ᴍʏ ғᴇᴀᴛᴜʀᴇs ᴀɴᴅ ᴜsᴇ /setup ᴛᴏ ꜱᴇᴛᴜᴘ ᴍᴇ. ✺\n\n"\
            "⊶ ᴜsᴇ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴs ғᴏʀ ᴍᴏʀᴇ !"
 
     # Inline buttons including "Help" button
-    keyboard = InlineKeyboardMarkup(
-        [
-            [InlineKeyboardButton("➕𝗔𝗗𝗗 𝗠𝗘 𝗜𝗡 𝗬𝗢𝗨𝗥 𝗚𝗥𝗢𝗨𝗣", url="http://t.me/QuizNinjaBot?startgroup=true")],
-            [InlineKeyboardButton("HELP", callback_data="help_button")],
-            [InlineKeyboardButton("📢 CHANNEL", url="https://t.me/CODERS_ZONE"),
-             InlineKeyboardButton("🆘 SUPPORT", url="https://t.me/codder_chat")],
-        ]
-    )
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("➕𝗔𝗗𝗗 𝗠𝗘 𝗜𝗡 𝗬𝗢𝗨𝗥 𝗚𝗥𝗢𝗨𝗣", url="http://t.me/QuizNinjaBot?startgroup=true")],
+        [InlineKeyboardButton("HELP", callback_data="help_button")],
+        [InlineKeyboardButton("📢 CHANNEL", url="https://t.me/CODERS_ZONE"),
+         InlineKeyboardButton("🆘 SUPPORT", url="https://t.me/codder_chat")],
+    ])
 
-    # Send the start message
-    start_message = await message.reply_text(text, reply_markup=keyboard)
-
-    # Store the message ID for later editing
-    user_data = bot.get_user(int(message.chat.id))
-    user_data.start_message_id = start_message.message_id
-
+    # Edit or send the start message
+    if "start_message_id" in message.reply_to_message:
+        await bot.edit_message_text(
+            chat_id=message.chat.id,
+            message_id=message.reply_to_message.message_id,
+            text=text,
+            reply_markup=keyboard
+        )
+    else:
+        await message.reply_text(
+            text=text,
+            reply_markup=keyboard
+        )
 
 @Client.on_message(filters.command(["help"]))
 async def help_command(bot, message):
-    user_data = bot.get_user(int(message.chat.id))
-
-    # Help message with setup instructions
+    # Help message with inline buttons
     help_text = "🔧 **Setup Instructions:**\n"\
                 "1. Add me to your group.\n"\
                 "2. Use the `/config` command to set up your group's preferences.\n"\
@@ -42,29 +43,24 @@ async def help_command(bot, message):
                 "✅ That's it! Your group is configured for interactive quizzes. Use /quiz to start!"
 
     # Inline buttons including "Home" button
-    keyboard = InlineKeyboardMarkup(
-        [
-            [InlineKeyboardButton("➕𝗔𝗗𝗗 𝗠𝗘 𝗜𝗡 𝗬𝗢𝗨𝗥 𝗚𝗥𝗢𝗨𝗣", url="http://t.me/QuizNinjaBot?startgroup=true")], 
-            [InlineKeyboardButton("HOME", callback_data="home_button")],
-            [InlineKeyboardButton("📢 CHANNEL", url="https://t.me/CODERS_ZONE"),
-             InlineKeyboardButton("🆘 SUPPORT", url="https://t.me/codder_chat")],
-        ]
-    )
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("➕𝗔𝗗𝗗 𝗠𝗘 𝗜𝗡 𝗬𝗢𝗨𝗥 𝗚𝗥𝗢𝗨𝗣", url="http://t.me/QuizNinjaBot?startgroup=true")],
+        [InlineKeyboardButton("HOME", callback_data="home_button")],
+        [InlineKeyboardButton("📢 CHANNEL", url="https://t.me/CODERS_ZONE"),
+         InlineKeyboardButton("🆘 SUPPORT", url="https://t.me/codder_chat")],
+    ])
 
-    # Edit the existing start message with the help message
+    # Edit the existing message with the help message
     await bot.edit_message_text(
         chat_id=message.chat.id,
-        message_id=user_data.start_message_id,
+        message_id=message.reply_to_message.message_id,
         text=help_text,
         reply_markup=keyboard
     )
 
-
 @Client.on_callback_query()
 async def callback_handler(bot, query):
     if query.data == "help_button":
-        # Trigger the help_command and edit the existing start message
         await help_command(bot, query.message)
     elif query.data == "home_button":
-        # Trigger the start_command and edit the existing help message
         await start_command(bot, query.message)
