@@ -1,12 +1,8 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-# Placeholder for saving start message ID
-start_message_id = None
-
 @Client.on_message(filters.command(["start"]))
 async def start_command(bot, message):
-    global start_message_id
     user = message.from_user
     bot_name = "𝗤𝗨𝗜𝗭 𝗡𝗜𝗡𝗝𝗔"  # Replace with your bot's name
 
@@ -29,13 +25,14 @@ async def start_command(bot, message):
     # Send the start message
     start_message = await message.reply_text(text, reply_markup=keyboard)
 
-    # Save the message ID for deletion
-    start_message_id = start_message.message_id
+    # Store the message ID for later editing
+    user_data = bot.get_user(int(message.chat.id))
+    user_data.start_message_id = start_message.message_id
 
 
 @Client.on_message(filters.command(["help"]))
 async def help_command(bot, message):
-    global start_message_id
+    user_data = bot.get_user(int(message.chat.id))
 
     # Help message with setup instructions
     help_text = "🔧 **Setup Instructions:**\n"\
@@ -54,22 +51,20 @@ async def help_command(bot, message):
         ]
     )
 
-    # Send the help message
-    help_message = await message.reply_text(help_text, reply_markup=keyboard)
-
-    # Delete the previous start message
-    await bot.delete_messages(chat_id=message.chat.id, message_ids=start_message_id)
-
-    # Save the message ID for deletion
-    start_message_id = None
+    # Edit the existing start message with the help message
+    await bot.edit_message_text(
+        chat_id=message.chat.id,
+        message_id=user_data.start_message_id,
+        text=help_text,
+        reply_markup=keyboard
+    )
 
 
 @Client.on_callback_query()
 async def callback_handler(bot, query):
     if query.data == "help_button":
-        # Trigger the help_command and delete the current start message
+        # Trigger the help_command and edit the existing start message
         await help_command(bot, query.message)
     elif query.data == "home_button":
-        # Trigger the start_command and delete the current help message
+        # Trigger the start_command and edit the existing help message
         await start_command(bot, query.message)
-    
