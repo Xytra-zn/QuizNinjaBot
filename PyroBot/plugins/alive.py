@@ -2,7 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
 
-@Client.on_message(filters.command(["alive"]))
+@Client.on_message(filters.command(["alive", "ping"]))
 async def alive_command(bot, message):
     start_time = time.time()
     user = message.from_user
