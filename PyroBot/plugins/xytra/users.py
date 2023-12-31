@@ -16,10 +16,11 @@ async def is_served_user(user_id: int) -> bool:
 
 async def get_served_users() -> list:
     users_list = []
-    async for user in usersdb.find({"user_id": {"$gt": 0}}):
+    users = usersdb.find({"user_id": {"$gt": 0}})
+    async for user in users:
         users_list.append(user)
     return users_list
-
+    
 async def add_served_user(user_id: int):
     is_served = await is_served_user(user_id)
     if is_served:
