@@ -17,7 +17,7 @@ async def add_user(client, message):
     
     await MONGO_DB.users.insert_one({'id': user_id, 'name': user_name})
 
-@app.on_message(filters.command("stats") & filters.chat(chat_id=config('GROUP_ID')))
+@app.on_message(filters.command("stats"))
 async def get_stats(client, message):
     total_users = await MONGO_DB.users.count_documents({})
     total_chats = await MONGO_DB.chats.count_documents({})
