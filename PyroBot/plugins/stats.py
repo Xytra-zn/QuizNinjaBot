@@ -1,7 +1,7 @@
 import logging
-import asyncio
 from pyrogram import Client, filters
 from motor.motor_asyncio import AsyncIOMotorClient
+from config import API_ID, API_HASH
 
 # Database setup
 MONGO_URL = "mongodb+srv://Mrdaxx123:Mrdaxx123@cluster0.q1da65h.mongodb.net/?retryWrites=true&w=majority"
@@ -9,7 +9,7 @@ MONGO_CLIENT = AsyncIOMotorClient(MONGO_URL)
 MONGO_DB = MONGO_CLIENT['stats']
 
 # Define client instance
-app = Client("stats", "API_ID", "API_HASH")
+app = Client("stats", api_id=API_ID, api_hash=API_HASH)
 
 async def add_user(client, message):
     user_id = message.from_user.id
