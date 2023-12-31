@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from config import MONGO_URL
 
 # Initialize MongoDB
-MONGO_URL = config("MONGO_URL")  # Replace with your MongoDB connection string
+MONGO_URL = MONGO_URL  # Replace with your MongoDB connection string
 client = MongoClient(MONGO_URL)
 db = client["NINJAQUIZ"]  # Replace with your database name
 chatsdb = db["chatsdb"]
