@@ -1,11 +1,11 @@
 from pyrogram import Client
 from pymongo import MongoClient
-from decouple import config
+from config import MONGO_URL
 
 # Initialize MongoDB
-MONGO_URL = config("MONGO_URL")  # Replace with your MongoDB connection string
+MONGO_URL = MONGO_URL  # Replace with your MongoDB connection string
 client = MongoClient(MONGO_URL)
-db = client["YourDatabaseName"]  # Replace with your database name
+db = client[""]  # Replace with your database name
 usersdb = db["users"]
 
 async def is_served_user(user_id: int) -> bool:
