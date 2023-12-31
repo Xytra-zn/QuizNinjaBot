@@ -48,5 +48,3 @@ def main():
     from aiogram.utils import executor
     executor.start_polling(bot, skip_updates=True)
 
-if __name__ == '__main__':
-    main()
