@@ -64,13 +64,12 @@ async def help_command(bot, message):
     start_message_id = None
 
 
-@Client.on_callback_query(filters.callback_query("help_button"))
-async def help_button_callback(bot, query):
-    # Trigger the help_command and delete the current start message
-    await help_command(bot, query.message)
-
-
-@Client.on_callback_query(filters.callback_query("home_button"))
-async def home_button_callback(bot, query):
-    # Trigger the start_command and delete the current help message
-    await start_command(bot, query.message)
+@Client.on_callback_query()
+async def callback_handler(bot, query):
+    if query.data == "help_button":
+        # Trigger the help_command and delete the current start message
+        await help_command(bot, query.message)
+    elif query.data == "home_button":
+        # Trigger the start_command and delete the current help message
+        await start_command(bot, query.message)
+    
