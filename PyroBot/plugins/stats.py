@@ -1,60 +1,52 @@
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import time
-from pymongo import MongoClient
+import os
+import motor.motor_asyncio
+from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
+from aiogram.dispatcher import FSMContext
+from aiogram.types import ParseMode
+from aiogram.utils import executor
+from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
 
-MONGODB_URL = "mongodb+srv://Mrdaxx123:Mrdaxx123@cluster0.q1da65h.mongodb.net/?retryWrites=true&w=majority"
+connection_string = "mongodb+srv://Mrdaxx123:Mrdaxx123@cluster0.q1da65h.mongodb.net/?retryWrites=true&w=majority"
+db = AsyncIOMotorClient(connection_string).db_name
+bot = Bot(token="6920434282:AAE0tBg8b8K1XRp3cWTzoqJdIG5I4imASJg", parse_mode=ParseMode.HTML)
+bot.db = db
 
-# Creating a connection to MongoDB
-client = MongoClient(MONGODB_URL)
+class MyBot(Bot):
+    async def on_message(self, message: types.Message):
+        await register_user(self.db, message.from_user.id, message.from_user.username, message.from_user.first_name, message.from_user.last_name)
+        await register_chat(self.db, message.chat.id, message.chat.title)
+        return await super().on_message(message)
 
-# Getting the 'quiz_ninja' database
-db = client['quiz_ninja']
+    async def on_chat_member(self, chat_member: types.ChatMemberUpdated):
+        await register_user(self.db, chat_member.new_chat_member.user.id, chat_member.new_chat_member.user.username, chat_member.new_chat_member.user.first_name, chat_member.new_chat_member.user.last_name)
+        await register_chat(self.db, chat_member.chat.id, chat_member.chat.title)
+        return await super().on_chat_member(chat_member)
 
-# Getting the 'stats' collection
-stats = db['stats']
+async def register_user(db, user_id, username, first_name, last_name):
+    users = db["users"]
+    user = await users.find_one({"id": user_id})
+    if not user:
+        await users.insert_one({
+            "id": user_id,
+            "username": username,
+            "first_name": first_name,
+            "last_name": last_name
+        })
 
-async def add_user(chat_id, user_id):
-    user = stats.find_one({"_id": user_id})
+async def register_chat(db, chat_id, title):
+    chats = db["chats"]
+    chat = await chats.find_one({"id": chat_id})
+    if not chat:
+        await chats.insert_one({
+            "id": chat_id,
+            "title": title
+        })
 
-    if user is None:
-        stats.insert_one({"_id": user_id, "total_chats": 1})
-    else:
-        stats.update_one({"_id": user_id}, {"$inc": {"total_chats": 1}})
+def main():
+    from aiogram.utils import executor
+    executor.start_polling(bot, skip_updates=True)
 
-    chat = stats.find_one({"_id": chat_id})
-
-    if chat is None:
-        stats.insert_one({"_id": chat_id, "total_users": 1})
-    else:
-        stats.update_one({"_id": chat_id}, {"$inc": {"total_users": 1}})
-
-async def get_stats():
-    chat_stats = stats.find_one({"_id": 0})
-
-    if chat_stats is None:
-        chat_stats = {"total_chats": 0, "total_users": 0}
-    else:
-        chat_stats["total_chats"] = chat_stats.get("total_chats", 0)
-        chat_stats["total_users"] = chat_stats.get("total_users", 0)
-
-    return chat_stats
-
-@Client.on_message(filters.command(["stats", "bot"]))
-async def stats_command(bot, message):
-    start_time = time.time()
-    user = message.from_user
-    chat_id = message.chat.id
-
-    # Add the user to the database
-    await add_user(chat_id, user.id)
-
-    # Get the total chats and users
-    total_chats, total_users = (await get_stats()).values()
-
-    # Sending the stats message with response time
-    text = f"Total chats: {total_chats}\n"\
-           f"Total users: {total_users}\n"\
-           f"Response time: {round((time.time() - start_time) * 1000, 2)} ms"
-
-    await bot.send_message(chat_id, text)
+if __name__ == '__main__':
+    main()
