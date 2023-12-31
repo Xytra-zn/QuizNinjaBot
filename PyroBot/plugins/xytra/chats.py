@@ -1,6 +1,6 @@
 from pyrogram import Client
 from pymongo import MongoClient
-from decouple import config
+from config import MONGO_URL
 
 # Initialize MongoDB
 MONGO_URL = config("MONGO_URL")  # Replace with your MongoDB connection string
