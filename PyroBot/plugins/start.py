@@ -16,6 +16,7 @@ async def start_command(bot, message):
     keyboard = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("➕𝗔𝗗𝗗 𝗠𝗘 𝗜𝗡 𝗬𝗢𝗨𝗥 𝗚𝗥𝗢𝗨𝗣", url="http://t.me/QuizNinjaBot?startgroup=true")],
+            [InlineKeyboardButton("❓ HELP", callback_data="help_button")],
             [InlineKeyboardButton("📢 CHANNEL", url="https://t.me/CODERS_ZONE"),
              InlineKeyboardButton("🆘 SUPPORT", url="https://t.me/codder_chat")],
         ]
