@@ -1,2 +1,0 @@
-mongo = MongoCli(MONGO_URL)
-db = mongo.Anonymous
