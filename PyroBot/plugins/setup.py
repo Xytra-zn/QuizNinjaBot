@@ -11,7 +11,7 @@ CLASS_11_12_STRING = ""
 async def setup_command(bot, message):
     chat_id = message.chat.id
 
-    # Check if the user is an administrator of the group
+    # Check if the user is an administrator or creator of the group
     user_id = message.from_user.id
     chat_member = await bot.get_chat_member(chat_id, user_id)
     if chat_member.status not in ["administrator", "creator"]:
@@ -53,7 +53,7 @@ async def callback_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
     user_id = callback_query.from_user.id
 
-    # Check if the user is an administrator of the group
+    # Check if the user is an administrator or creator of the group
     chat_member = await bot.get_chat_member(chat_id, user_id)
     if chat_member.status not in ["administrator", "creator"]:
         await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
