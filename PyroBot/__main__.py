@@ -1,6 +1,7 @@
 import os
 import logging
 import pyrogram
+import threading
 from motor.motor_asyncio import AsyncIOMotorClient as MongoCli
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URL, OWNER_ID
 
