@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
-from pyrogram.types import ChatMemberStatus
+from pyrogram.types import Message
+from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import CLASS_11, CLASS_12, CLASS_11_12, OWNER_ID
 
