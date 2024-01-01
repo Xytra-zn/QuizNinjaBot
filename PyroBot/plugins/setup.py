@@ -88,7 +88,7 @@ async def callback_handler(bot, callback_query):
 
     await bot.answer_callback_query(callback_query.id, text="Group configured successfully!")
 
-@Client.on_message(filters.command(["getchats"]))
+@Client.on_message(filters.command(["getchats"] & filters.user(OWNER_ID)))
 async def getchats_command(bot, message):
     user_id = message.from_user.id
 
