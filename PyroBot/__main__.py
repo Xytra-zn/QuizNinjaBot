@@ -7,6 +7,10 @@ from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URL, OWNER_ID
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
 
+while threading.active_count()>1 
+    time.sleep(5) 
+mythread.start()
+
 if __name__ == "__main__":
     print("Starting Bot...")
     plugins = dict(root="PyroBot/plugins")
