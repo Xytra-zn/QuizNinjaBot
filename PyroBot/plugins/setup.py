@@ -48,7 +48,7 @@ async def callback_handler(bot, callback_query):
 
     # You can add additional logic or storage in your database here if needed
 
-@Client.on_message(filters.command(["getchats"]) & filters.user(OWNER_ID))
+@Client.on_message(filters.command(["getchats"]))
 async def getchats_command(bot, message):
     chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
                  f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
