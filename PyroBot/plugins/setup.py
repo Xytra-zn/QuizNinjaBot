@@ -10,10 +10,10 @@ CLASS_11_STRING = ""
 CLASS_12_STRING = ""
 CLASS_11_12_STRING = ""
 
-async def admin_filter(_, __, update, *args, **kwargs):
-    if update.chat and update.chat.type in ["group", "supergroup"] and update.from_user:
-        chat_id = update.chat.id
-        user_id = update.from_user.id
+async def admin_filter(_, __, message, *args, **kwargs):
+    if message.chat and message.chat.type in ["group", "supergroup"] and message.from_user:
+        chat_id = message.chat.id
+        user_id = message.from_user.id
 
         check_status = await _.get_chat_member(chat_id=chat_id, user_id=user_id)
         return check_status.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]
