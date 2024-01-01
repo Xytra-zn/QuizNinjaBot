@@ -1,8 +1,8 @@
 from pyrogram import filters, Client
 from pyrogram.types import Message
 
-from PyroBot.plugins.xytra.chats import get_served_chats
-from PyroBot.plugins.xytra.users import get_served_users
+from PyroBot.plugins.chats import get_served_chats
+from PyroBot.plugins.users import get_served_users
 
 @Client.on_message(filters.command("stats"))
 async def stats(cli: Client, message: Message):
