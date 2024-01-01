@@ -2,10 +2,20 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import CLASS_11, CLASS_12, CLASS_11_12, OWNER_ID
 
+OWNER_ID = OWNER_ID
 # Initialize strings to store chat IDs
 CLASS_11_STRING = ""
 CLASS_12_STRING = ""
 CLASS_11_12_STRING = ""
+
+async def admin_filter(_, __, update):
+    if update.chat and update.chat.type in ["group", "supergroup"] and update.from_user:
+        chat_id = update.chat.id
+        user_id = update.from_user.id
+
+        check_status = await _.get_chat_member(chat_id=chat_id, user_id=user_id)
+        return check_status.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]
+    return False
 
 @Client.on_message(filters.command(["setup"]) & admin_filter)
 async def setup_command(bot, message):
