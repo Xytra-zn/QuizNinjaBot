@@ -7,15 +7,21 @@ CLASS_11_STRING = ""
 CLASS_12_STRING = ""
 CLASS_11_12_STRING = ""
 
+admin_statuses = ["administrator", "creator"]
+
 @Client.on_message(filters.command(["setup"]))
 async def setup_command(bot, message):
     chat_id = message.chat.id
-
-    # Check if the user is an administrator or creator of the group
     user_id = message.from_user.id
-    chat_member = await bot.get_chat_member(chat_id, user_id)
-    if chat_member.status not in ["administrator", "creator"]:
-        await message.reply_text("You need to be an administrator to set up the group.")
+
+    try:
+        chat_member = await bot.get_chat_member(chat_id, user_id)
+        if chat_member.status not in admin_statuses:
+            await message.reply_text("You need to be an administrator to set up the group.")
+            return
+    except Exception as e:
+        await message.reply_text("An error occurred while checking admin status.")
+        print(f"An error occurred: {e}")
         return
 
     # Check if the chat is already configured
@@ -53,10 +59,14 @@ async def callback_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
     user_id = callback_query.from_user.id
 
-    # Check if the user is an administrator or creator of the group
-    chat_member = await bot.get_chat_member(chat_id, user_id)
-    if chat_member.status not in ["administrator", "creator"]:
-        await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
+    try:
+        chat_member = await bot.get_chat_member(chat_id, user_id)
+        if chat_member.status not in admin_statuses:
+            await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
+            return
+    except Exception as e:
+        await bot.answer_callback_query(callback_query.id, text="An error occurred while checking admin status.")
+        print(f"An error occurred: {e}")
         return
 
     # Get the chosen class from the callback data
@@ -92,15 +102,19 @@ async def callback_handler(bot, callback_query):
 async def getchats_command(bot, message):
     user_id = message.from_user.id
 
-    # Check if the user is the owner
     if user_id != OWNER_ID:
+        await message.reply_text("You are not authorized to use this command.")
         return
+    
+    try:
+        chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
+                     f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
+                     f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
 
-    chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
-                 f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
-                 f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
-
-    await bot.send_message(message.chat.id, chats_text)
+        await bot.send_message(message.chat.id, chats_text)
+    except Exception as e:
+        await message.reply_text("An error occurred while retrieving chat lists.")
+        print(f"An error occurred: {e}")
 
 def remove_chat_id_from_classes(chat_id):
     if chat_id in CLASS_11:
