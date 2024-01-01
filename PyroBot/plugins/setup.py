@@ -2,7 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import CLASS_11, CLASS_12, CLASS_11_12, OWNER_ID
 
-OWNER_ID = OWNER_ID
+OWNER_ID = "OWNER_ID"
 # Initialize strings to store chat IDs
 CLASS_11_STRING = ""
 CLASS_12_STRING = ""
