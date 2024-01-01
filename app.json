@@ -7,7 +7,7 @@
     "python",
     "pyrogram"
   ],
-    "buildpacks": [{
+  "buildpacks": [{
     "url": "heroku/python"
   }],
   "repository": "https://github.com/Xytra-zn/chatbot",
@@ -28,13 +28,28 @@
       "value": ""
     },
     "MONGO_URL": {
-      "description": "Get a mongodb url from https://cloud.mongodb.com.",
+      "description": "Get a MongoDB URL from https://cloud.mongodb.com.",
       "required": true,
       "value": ""
     },
     "OWNER_ID": {
-      "description": "User id of the user who will known as owner of the bot.",
+      "description": "User ID of the user who will be known as the owner of the bot.",
       "required": true,
+      "value": ""
+    },
+    "CLASS_11": {
+      "description": "Chat IDs for Class 11 (comma-separated)",
+      "required": false,
+      "value": ""
+    },
+    "CLASS_12": {
+      "description": "Chat IDs for Class 12 (comma-separated)",
+      "required": false,
+      "value": ""
+    },
+    "CLASS_11_12": {
+      "description": "Chat IDs for Class 11+12 (comma-separated)",
+      "required": false,
       "value": ""
     }
   }
