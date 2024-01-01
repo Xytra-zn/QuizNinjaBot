@@ -7,22 +7,9 @@ CLASS_11_STRING = ""
 CLASS_12_STRING = ""
 CLASS_11_12_STRING = ""
 
-admin_statuses = ["administrator", "creator"]
-
-@Client.on_message(filters.command(["setup"]))
+@Client.on_message(filters.command(["setup"]) & admin_filter)
 async def setup_command(bot, message):
     chat_id = message.chat.id
-    user_id = message.from_user.id
-
-    try:
-        chat_member = await bot.get_chat_member(chat_id, user_id)
-        if chat_member.status not in admin_statuses:
-            await message.reply_text("You need to be an administrator to set up the group.")
-            return
-    except Exception as e:
-        await message.reply_text("An error occurred while checking admin status.")
-        print(f"An error occurred: {e}")
-        return
 
     # Check if the chat is already configured
     if chat_id in CLASS_11 or chat_id in CLASS_12 or chat_id in CLASS_11_12:
@@ -57,17 +44,6 @@ async def setup_command(bot, message):
 @Client.on_callback_query()
 async def callback_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
-    user_id = callback_query.from_user.id
-
-    try:
-        chat_member = await bot.get_chat_member(chat_id, user_id)
-        if chat_member.status not in admin_statuses:
-            await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
-            return
-    except Exception as e:
-        await bot.answer_callback_query(callback_query.id, text="An error occurred while checking admin status.")
-        print(f"An error occurred: {e}")
-        return
 
     # Get the chosen class from the callback data
     chosen_class = callback_query.data
@@ -102,19 +78,15 @@ async def callback_handler(bot, callback_query):
 async def getchats_command(bot, message):
     user_id = message.from_user.id
 
+    # Check if the user is the owner
     if user_id != OWNER_ID:
-        await message.reply_text("You are not authorized to use this command.")
         return
-    
-    try:
-        chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
-                     f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
-                     f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
 
-        await bot.send_message(message.chat.id, chats_text)
-    except Exception as e:
-        await message.reply_text("An error occurred while retrieving chat lists.")
-        print(f"An error occurred: {e}")
+    chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
+                 f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
+                 f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
+
+    await bot.send_message(message.chat.id, chats_text)
 
 def remove_chat_id_from_classes(chat_id):
     if chat_id in CLASS_11:
@@ -129,3 +101,4 @@ def update_strings():
     CLASS_11_STRING = ", ".join(map(str, CLASS_11))
     CLASS_12_STRING = ", ".join(map(str, CLASS_12))
     CLASS_11_12_STRING = ", ".join(map(str, CLASS_11_12))
+
