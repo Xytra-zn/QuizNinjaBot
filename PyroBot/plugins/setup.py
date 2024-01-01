@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.enums import ChatType, ChatMemberStatus
+import threading
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import CLASS_11, CLASS_12, CLASS_11_12, OWNER_ID
 
@@ -98,6 +99,10 @@ def remove_chat_id_from_classes(chat_id):
         CLASS_12.remove(chat_id)
     if chat_id in CLASS_11_12:
         CLASS_11_12.remove(chat_id)
+
+while threading.active_count() > 1:
+    time.sleep(5)
+mythread.start()
 
 def update_strings():
     global CLASS_11_STRING, CLASS_12_STRING, CLASS_11_12_STRING
