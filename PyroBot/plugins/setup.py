@@ -35,6 +35,7 @@ async def callback_handler(bot, callback_query):
     user_id = callback_query.from_user.id
 
     # Check if the user is an administrator of the group
+    chat_member = await bot.get_chat_member(chat_id, user_id)
     if chat_member.status not in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER]:
         await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
         return
