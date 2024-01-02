@@ -68,6 +68,7 @@ async def callback_handler(bot, callback_query):
 
     await bot.answer_callback_query(callback_query.id, text="Group configured successfully!")
 
+
 def get_class_text(chat_id):
     if chat_id in CLASS_11:
         return "11"
