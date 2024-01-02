@@ -13,11 +13,12 @@ async def setup_command(bot, message):
     chat_id = message.chat.id
     user_id = message.from_user.id
 
-    # Check if the user is an owner or administrator of the group
-    chat_member = await bot.get_chat_member(chat_id, user_id)
-    if chat_member.status not in [enums.ChatMemberStatus.OWNER, enums.ChatMemberStatus.ADMINISTRATOR]:
-        await message.reply_text("You need to be an owner or administrator to use this command.")
-        return
+    # Check if the user is an administrator of the group
+chat_member = await bot.get_chat_member(chat_id, user_id)
+if chat_member.status not in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.CREATOR]:
+    await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
+    return
+
 
     # Send a message with inline buttons to choose the class
     markup = InlineKeyboardMarkup([
