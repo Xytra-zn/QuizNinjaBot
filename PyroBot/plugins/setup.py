@@ -13,7 +13,8 @@ async def setup_command(bot, message):
     user_id = message.from_user.id
 
     # Check if the user is an administrator of the group
-    if not await bot.get_chat_member(chat_id, user_id).status in ["administrator", "creator"]:
+    chat_member = await bot.get_chat_member(chat_id, user_id)
+    if not chat_member.status in ["administrator", "creator"]:
         await message.reply_text("You need to be an administrator to use this command.")
         return
 
