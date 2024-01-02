@@ -39,8 +39,8 @@ async def callback_handler(bot, callback_query):
 
     # Check if the user is an administrator of the group
     chat_member = await bot.get_chat_member(chat_id, user_id)
-if not chat_member.status in ["administrator", "creator"]:
-   return 
+    if not chat_member.status in ["administrator", "creator"]:
+        return
 
     # Update the appropriate list based on the chosen class
     if chosen_class == "class_11":
@@ -78,8 +78,6 @@ def get_class_text(chat_id):
         return "11+12"
     else:
         return "None selected"
-
-
 
 def remove_chat_id_from_classes(chat_id):
     if chat_id in CLASS_11:
