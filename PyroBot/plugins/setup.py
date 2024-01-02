@@ -12,7 +12,7 @@ CLASS_11_12_STRING = ""
 async def setup_command(bot, message):
     chat_id = message.chat.id
     user_id = message.from_user.id
-
+    
     # Check if the user is an administrator of the group
     chat_member = await bot.get_chat_member(chat_id, user_id)
     if chat_member.status not in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER]:
@@ -33,6 +33,8 @@ async def setup_command(bot, message):
 async def callback_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
     user_id = callback_query.from_user.id
+    message_id = callback_query.message.message_id
+  
 
     # Check if the user is an administrator of the group
     chat_member = await bot.get_chat_member(chat_id, user_id)
@@ -61,7 +63,7 @@ async def callback_handler(bot, callback_query):
     class_text = get_class_text(chat_id)
 
     # Delete the original message with the buttons
-    await bot.edit_message_text(chat_id=chat_id, message_id=callback_query.message.message_id)
+    await bot.edit_message_text(chat_id=chat_id, message_id=message_id)
 
 
     # Send a new message indicating successful configuration
