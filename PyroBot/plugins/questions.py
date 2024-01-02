@@ -26,6 +26,10 @@ async def generate_poll_command(bot, message):
 # Maximum number of retry attempts
 MAX_RETRIES = 5
 
+# Define a function to send a message to the log group
+async def send_to_log_group(bot, message_text):
+    await bot.send_message(LOG_GROUP_ID, message_text)
+
 # Define a function to get a question from the bard api with retry mechanism
 def get_question():
     for attempt in range(1, MAX_RETRIES + 1):
@@ -34,7 +38,7 @@ def get_question():
             response = requests.get("https://api.safone.dev/bard?message=give%20a%20random%20class%2011th%20chapter%20jee%20previous%20year%20question%20from%20any%20of%20three%20subjects%20%5Bphysic%2C%20chemistry%20and%20maths%5D%20in%20this%20format%20and%20nothing%20extra%3A-%20%7B%20%20%20%22question%22%3A%20%22What%20is%20the%20capital%20of%20France%3F%22%2C%20%20%20%22options%22%3A%20%5B%22Paris%22%2C%20%22Berlin%22%2C%20%22London%22%2C%20%22Rome%22%5D%2C%20%20%20%22correct_option_id%22%3A%200%20%7D")
             # Parse the response as json
             data = response.json()
-            
+
             if "text" in data["candidates"][0]["content"]["parts"][0]:
                 # New response format
                 question = data["candidates"][0]["content"]["parts"][0]["text"]["text"]
@@ -50,8 +54,11 @@ def get_question():
             return question, options, correct_option_id
         except Exception as e:
             print(f"Attempt {attempt} failed. Error: {e}")
+            last_response = response.text  # Save the last API response
+            continue
 
-    # If all attempts fail, print a failure message
+    # If all attempts fail, send the last API response to the log group
+    send_to_log_group(last_response)
     print("Failed to get response from the API after multiple attempts.")
-    # Return the last API response if needed
+    # Return None if needed
     return None
