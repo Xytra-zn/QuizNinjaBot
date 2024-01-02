@@ -61,7 +61,9 @@ async def callback_handler(bot, callback_query):
     class_text = get_class_text(chat_id)
 
     # Delete the original message with the buttons
-    await bot.delete_messages(chat_id, message_id=callback_query.message.message_id)
+    await bot.delete_messages(chat_id, message_id=callback_query.message_id)
+
+
 
     # Send a new message indicating successful configuration
     await bot.send_message(chat_id, f"Your class is successfully configured! ✓✓\n\nClass: {class_text}\nIf you want to change class, then use /setup again.")
