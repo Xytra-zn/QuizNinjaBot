@@ -34,10 +34,18 @@ def get_question():
             response = requests.get("https://api.safone.dev/bard?message=give%20a%20random%20class%2011th%20chapter%20jee%20previous%20year%20question%20from%20any%20of%20three%20subjects%20%5Bphysic%2C%20chemistry%20and%20maths%5D%20in%20this%20format%20and%20nothing%20extra%3A-%20%7B%20%20%20%22question%22%3A%20%22What%20is%20the%20capital%20of%20France%3F%22%2C%20%20%20%22options%22%3A%20%5B%22Paris%22%2C%20%22Berlin%22%2C%20%22London%22%2C%20%22Rome%22%5D%2C%20%20%20%22correct_option_id%22%3A%200%20%7D")
             # Parse the response as json
             data = response.json()
-            # Extract the question, options, and correct option id from the data
-            question = data["candidates"][0]["content"]["parts"][0]["text"]["question"]
-            options = data["candidates"][0]["content"]["parts"][0]["text"]["options"]
-            correct_option_id = data["candidates"][0]["content"]["parts"][0]["text"]["correct_option_id"]
+            
+            if "text" in data["candidates"][0]["content"]["parts"][0]:
+                # New response format
+                question = data["candidates"][0]["content"]["parts"][0]["text"]["text"]
+                options = data["candidates"][0]["content"]["parts"][0]["text"]["options"]
+                correct_option_id = data["candidates"][0]["content"]["parts"][0]["text"]["correct_option_id"]
+            else:
+                # Old response format
+                question = data["candidates"][0]["content"]["parts"][0]["text"]["question"]
+                options = data["candidates"][0]["content"]["parts"][0]["text"]["options"]
+                correct_option_id = data["candidates"][0]["content"]["parts"][0]["text"]["correct_option_id"]
+
             # Return the question, options, and correct option id as a tuple
             return question, options, correct_option_id
         except Exception as e:
