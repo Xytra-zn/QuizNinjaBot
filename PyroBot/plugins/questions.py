@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 
-LOG_GROUP_ID = "-1002014693954"
+LOG_GROUP_ID = "-1002066245840"
 
 @Client.on_message(filters.command(["newpoll"]))
 async def new_poll_command(bot, message):
