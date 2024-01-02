@@ -103,4 +103,3 @@ async def all_chats_handler(bot, callback_query):
                      f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
 
     await bot.send_message(chat_id, all_chats_text)
-Now, when 
