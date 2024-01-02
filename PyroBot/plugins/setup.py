@@ -1,19 +1,21 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message
-from pyrogram.enums import ChatType, ChatMemberStatus
-import threading
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import CLASS_11, CLASS_12, CLASS_11_12, OWNER_ID
 
-OWNER_ID = "OWNER_ID"
 # Initialize strings to store chat IDs
 CLASS_11_STRING = ""
 CLASS_12_STRING = ""
 CLASS_11_12_STRING = ""
 
-@Client.on_message(filters.command(["setup"]) & is_admin)
+@Client.on_message(filters.command(["setup"]))
 async def setup_command(bot, message):
     chat_id = message.chat.id
+    user_id = message.from_user.id
+
+    # Check if the user is an administrator of the group
+    if not await bot.get_chat_member(chat_id, user_id).status in ["administrator", "creator"]:
+        await message.reply_text("You need to be an administrator to use this command.")
+        return
 
     # Check if the chat is already configured
     if chat_id in CLASS_11 or chat_id in CLASS_12 or chat_id in CLASS_11_12:
@@ -33,9 +35,6 @@ async def setup_command(bot, message):
         )
         return
 
-    # Remove the chat ID from the old class strings if it's present
-    remove_chat_id_from_classes(chat_id)
-
     # Send a message with inline buttons to choose the class
     markup = InlineKeyboardMarkup([
         [InlineKeyboardButton("11", callback_data="class_11")],
@@ -48,19 +47,25 @@ async def setup_command(bot, message):
 @Client.on_callback_query()
 async def callback_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
+    user_id = callback_query.from_user.id
 
     # Get the chosen class from the callback data
     chosen_class = callback_query.data
 
-    # Remove the chat ID from the old class strings if it's present
-    remove_chat_id_from_classes(chat_id)
+    # Check if the user is an administrator of the group
+    if not await bot.get_chat_member(chat_id, user_id).status in ["administrator", "creator"]:
+        await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
+        return
 
     # Update the appropriate list based on the chosen class
     if chosen_class == "class_11":
+        remove_chat_id_from_classes(chat_id)
         CLASS_11.append(chat_id)
     elif chosen_class == "class_12":
+        remove_chat_id_from_classes(chat_id)
         CLASS_12.append(chat_id)
     elif chosen_class == "class_11_12":
+        remove_chat_id_from_classes(chat_id)
         CLASS_11_12.append(chat_id)
 
     # Update the strings
@@ -78,35 +83,16 @@ async def callback_handler(bot, callback_query):
 
     await bot.answer_callback_query(callback_query.id, text="Group configured successfully!")
 
-@Client.on_message(filters.command(["getchats"]))
-async def getchats_command(bot, message):
-    user_id = message.from_user.id
-
-    # Check if the user is the owner
-    if user_id != OWNER_ID:
-        return
-
-    chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
-                 f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
-                 f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
-
-    await bot.send_message(message.chat.id, chats_text)
-
 def remove_chat_id_from_classes(chat_id):
     if chat_id in CLASS_11:
         CLASS_11.remove(chat_id)
-    if chat_id in CLASS_12:
+    elif chat_id in CLASS_12:
         CLASS_12.remove(chat_id)
-    if chat_id in CLASS_11_12:
+    elif chat_id in CLASS_11_12:
         CLASS_11_12.remove(chat_id)
-
-while threading.active_count() > 1:
-    time.sleep(5)
-mythread.start()
 
 def update_strings():
     global CLASS_11_STRING, CLASS_12_STRING, CLASS_11_12_STRING
     CLASS_11_STRING = ", ".join(map(str, CLASS_11))
     CLASS_12_STRING = ", ".join(map(str, CLASS_12))
     CLASS_11_12_STRING = ", ".join(map(str, CLASS_11_12))
-
