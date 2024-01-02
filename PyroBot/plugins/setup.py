@@ -27,7 +27,45 @@ async def setup_command(bot, message):
     ])
 
     class_text = get_class_text(chat_id)
-    await bot.send_message(chat_id, f"CHAT: {message.chat.title}\nClass: {class_text}\n\nTo select the preferred class for the quizzes in this chat, just click on the buttons below.", reply_markup=markup)
+    message_sent = await bot.send_message(chat_id, f"CHAT: {message.chat.title}\nClass: {class_text}\n\nTo select the preferred class for the quizzes in this chat, just click on the buttons below.", reply_markup=markup)
+
+@Client.on_callback_query()
+async def callback_handler(bot, callback_query):
+    chat_id = callback_query.message.chat.id
+    user_id = callback_query.from_user.id
+
+    # Get the chosen class from the callback data
+    chosen_class = callback_query.data
+
+    # Check if the user is an administrator of the group
+    chat_member = await bot.get_chat_member(chat_id, user_id)
+    if not chat_member.status in ["administrator", "creator"]:
+        return
+
+    # Update the appropriate list based on the chosen class
+    if chosen_class == "class_11":
+        remove_chat_id_from_classes(chat_id)
+        CLASS_11.append(chat_id)
+    elif chosen_class == "class_12":
+        remove_chat_id_from_classes(chat_id)
+        CLASS_12.append(chat_id)
+    elif chosen_class == "class_11_12":
+        remove_chat_id_from_classes(chat_id)
+        CLASS_11_12.append(chat_id)
+
+    # Update the strings
+    update_strings()
+
+    # Get the updated class text
+    class_text = get_class_text(chat_id)
+
+    # Delete the original message with the buttons
+    await bot.delete_messages(chat_id, callback_query.message.message_id)
+
+    # Send a new message indicating successful configuration
+    await bot.send_message(chat_id, f"Your class is successfully configured! ✓✓\n\nClass: {class_text}\nIf you want to change class, then use /setup again.")
+
+    await bot.answer_callback_query(callback_query.id, text="Group configured successfully!")
 
 @Client.on_callback_query()
 async def callback_handler(bot, callback_query):
