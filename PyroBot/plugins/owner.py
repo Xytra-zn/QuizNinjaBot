@@ -2,12 +2,14 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from datetime import datetime, timedelta
 from .setup import update_strings, CLASS_11_STRING, CLASS_12_STRING, CLASS_11_12_STRING
-from config import OWNER_ID, LOGS_CHAT_ID
+from config import OWNER_ID
+
+LOGS_CHAT_ID = "-1002014693954"
 
 # Initialize the last sent time for periodic messages
 last_sent_time = datetime.now()
 
-@Client.on_message(filters.command(["getchats"]) & filters.user(OWNER_ID))
+@Client.on_message(filters.command(["getchats"]))
 async def getchats_command_owner(bot, message: Message):
     update_strings()
     class_11_chats = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n"
