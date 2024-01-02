@@ -8,6 +8,9 @@ async def new_poll_command(bot, message):
         # Extract the JSON content from the message text
         json_content = message.text.split("/newpoll")[1].strip()
         
+        # Removing the last line from JSON content
+        json_content = json_content.rsplit("\n", 1)[0].strip()
+        
         # Convert the JSON content to a dictionary
         poll_data = eval(json_content)
         
