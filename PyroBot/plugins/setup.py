@@ -94,7 +94,7 @@ def update_strings():
     CLASS_11_12_STRING = ", ".join(map(str, CLASS_11_12))
 
 
-@Client.on_callback_query(filters.regex("all_chats"))
+@Client.on_callback_query(filters.command(["all_chats"]))
 async def all_chats_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
 
