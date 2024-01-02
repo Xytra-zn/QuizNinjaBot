@@ -33,7 +33,7 @@ async def setup_command(bot, message):
 async def callback_handler(bot, callback_query):
     chat_id = callback_query.message.chat.id
     user_id = callback_query.from_user.id
-    message_id = callback_query.message.message_id
+    message_id = callback_query.message.id
   
 
     # Check if the user is an administrator of the group
