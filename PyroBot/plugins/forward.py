@@ -1,7 +1,7 @@
 from pyrogram import Client, filters
 import time
 import random
-from config import CLASS_11_STRING
+from PyroBot.plugins.setup import CLASS_11_STRING
 
 LOG_GROUP_ID = "-1002066245840"
 
