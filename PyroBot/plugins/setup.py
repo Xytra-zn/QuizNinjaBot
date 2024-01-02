@@ -38,9 +38,9 @@ async def callback_handler(bot, callback_query):
     chosen_class = callback_query.data
 
     # Check if the user is an administrator of the group
-    if not await bot.get_chat_member(chat_id, user_id).status in ["administrator", "creator"]:
-        await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
-        return
+    chat_member = await bot.get_chat_member(chat_id, user_id)
+if not chat_member.status in ["administrator", "creator"]:
+   return 
 
     # Update the appropriate list based on the chosen class
     if chosen_class == "class_11":
