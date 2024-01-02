@@ -27,8 +27,6 @@ def get_question():
     response = requests.get("https://api.safone.dev/bard?message=give%20a%20random%20class%20eleventh%20chapters%20jee%20previous%20year%20question%20in%20this%20format%20and%20nothing%20extra:-%20question%20=%20%22What%27s%20the%20best%20programming%20language?[year=2022]%22options%20=%20[%20%20%20%20%22Python%22,%20%20%20%20%22Java%22,%20%20%20%20%22JavaScript%22,%20%20%20%20%22C++%22]correct_option_id%20=%200")
     data = response.json()
     question = data["message"]
-    options = data["candidates"][0]["content"]["parts"][0]["text"]["options"]
-    correct_option_id = data["candidates"][0]["content"]["parts"][0]["text"]["correct_option_id"]
+    options = data["candidates"][0]["content"]["parts"][0]["options"]
+    correct_option_id = data["candidates"][0]["content"]["parts"][0]["correct_option_id"]
     return question, options, correct_option_id
-
-
