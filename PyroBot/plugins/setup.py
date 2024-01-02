@@ -69,6 +69,17 @@ async def callback_handler(bot, callback_query):
 
     await bot.answer_callback_query(callback_query.id, text="Group configured successfully!")
 
+def get_class_text(chat_id):
+    if chat_id in CLASS_11:
+        return "11"
+    elif chat_id in CLASS_12:
+        return "12"
+    elif chat_id in CLASS_11_12:
+        return "11+12"
+    else:
+        return "None selected"
+
+
 
 def remove_chat_id_from_classes(chat_id):
     if chat_id in CLASS_11:
