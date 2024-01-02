@@ -92,3 +92,15 @@ def update_strings():
     CLASS_11_STRING = ", ".join(map(str, CLASS_11))
     CLASS_12_STRING = ", ".join(map(str, CLASS_12))
     CLASS_11_12_STRING = ", ".join(map(str, CLASS_11_12))
+
+
+@Client.on_callback_query(filters.regex("all_chats"))
+async def all_chats_handler(bot, callback_query):
+    chat_id = callback_query.message.chat.id
+
+    all_chats_text = f"CLASS 11 CHATS: {CLASS_11_STRING}\n\n" \
+                     f"CLASS 12 CHATS: {CLASS_12_STRING}\n\n" \
+                     f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
+
+    await bot.send_message(chat_id, all_chats_text)
+Now, when 
