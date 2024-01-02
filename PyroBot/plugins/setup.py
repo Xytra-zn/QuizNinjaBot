@@ -61,9 +61,7 @@ async def callback_handler(bot, callback_query):
     class_text = get_class_text(chat_id)
 
     # Delete the original message with the buttons
-    # Remove the button message from the chat history
     await bot.edit_message_text(chat_id=chat_id, message_id=callback_query.message.message_id)
-
 
 
     # Send a new message indicating successful configuration
