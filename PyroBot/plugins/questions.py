@@ -1,11 +1,10 @@
 from pyrogram import Client, filters
-from config import OWNER_ID
 import requests
 
 LOG_GROUP_ID = "-1002014693954"
 
 # Define a handler for the /generate_poll command
-@Client.on_message(filters.command(["generate_poll"]) & filters.user(OWNER_ID))
+@Client.on_message(filters.command(["generate_poll"]))
 async def generate_poll_command(bot, message):
     # Get a question from the bard api
     question, options, correct_option_id = get_question()
