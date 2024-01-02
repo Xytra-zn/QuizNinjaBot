@@ -36,7 +36,7 @@ async def callback_handler(bot, callback_query):
 
     # Check if the user is an administrator of the group
     chat_member = await bot.get_chat_member(chat_id, user_id)
-    if not chat_member.status in [enums.ChatMemberStatus.OWNER, enums.ChatMemberStatus.ADMINISTRATOR]:
+    if not chat_member.status in ["administrator", "creator"]:
         await bot.answer_callback_query(callback_query.id, text="You need to be an administrator to configure the group.")
         return
 
@@ -61,7 +61,7 @@ async def callback_handler(bot, callback_query):
     class_text = get_class_text(chat_id)
 
     # Delete the original message with the buttons
-    await bot.delete_messages(chat_id, callback_query.message.message_id)
+    await bot.delete_messages(chat_id, message_id=callback_query.message.message_id)
 
     # Send a new message indicating successful configuration
     await bot.send_message(chat_id, f"Your class is successfully configured! ✓✓\n\nClass: {class_text}\nIf you want to change class, then use /setup again.")
