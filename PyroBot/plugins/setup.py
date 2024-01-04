@@ -145,7 +145,7 @@ async def send_to_all_groups():
         await asyncio.sleep(1)
     
     try:
-        group_ids = CLASS_11_STRING.split(', ')
+        group_ids = CLASS_11_STRING
         group_ids = list(map(int, group_ids))
 
         for group_id in group_ids:
