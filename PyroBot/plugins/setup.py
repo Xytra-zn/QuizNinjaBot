@@ -1,5 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram import enums
+import time
+import random
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import CLASS_11, CLASS_12, CLASS_11_12, OWNER_ID
 
@@ -103,4 +105,57 @@ async def all_chats_handler(bot, message):
                      f"CLASS 11+12 CHATS: {CLASS_11_12_STRING}\n\n"
 
     await bot.send_message(chat_id, all_chats_text)
+
+
+
+# Store the message IDs of the sent messages
+sent_message_ids = set()
+
+# Store the message IDs along with their respective timestamps
+sent_message_timestamps = {}
+
+def get_random_message(group_id):
+    try:
+        messages = []
+        async for message in app.iter_history(group_id=-1002014693954):
+            if message.text and message.message_id not in sent_message_ids:
+                messages.append(message)
+        
+        if messages:
+            random_message = random.choice(messages)
+            sent_message_ids.add(random_message.message_id)
+            sent_message_timestamps[random_message.message_id] = time.time()
+            return random_message.text
+        
+    except Exception as e:
+        print(f"Error in get_random_message: {e}")
+        return None
+
+async def send_to_all_groups():
+    try:
+        group_ids = CLASS_11_STRING.split(', ')
+        group_ids = list(map(int, group_ids))
+
+      
+        for group_id in group_ids:
+            try:
+                random_message = await get_random_message(int(group_id))
+                
+                if random_message:
+                    await app.send_message(int(group_id), random_message)
+            except Exception as e:
+                print(f"Error sending message to group {group_id}: {e}")
+                    
+    except Exception as e:
+        print(f"Error in send_to_all_groups: {e}")
+        
+    # Remove expired message IDs from the set
+    current_time = time.time()
+    expired_message_ids = [message_id for message_id, timestamp in sent_message_timestamps.items() if current_time - timestamp > 86400] # 86400 seconds = 24 hours
+    for message_id in expired_message_ids:
+        sent_message_ids.remove(message_id)
+        del sent_message_timestamps[message_id]
+
+    await asyncio.sleep(60)
+    await send_to_all_groups()
 
