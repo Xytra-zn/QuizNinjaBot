@@ -70,11 +70,11 @@ async def callback_handler(bot, callback_query):
 
 
 def get_class_text(chat_id):
-    if chat_id in CLASS_11:
+    if str(chat_id) in CLASS_11:
         return "11"
-    elif chat_id in CLASS_12:
+    elif str(chat_id) in CLASS_12:
         return "12"
-    elif chat_id in CLASS_11_12:
+    elif str(chat_id) in CLASS_11_12:
         return "11+12"
     else:
         return "None selected"
