@@ -114,7 +114,7 @@ sent_message_ids = set()
 # Store the message IDs along with their respective timestamps
 sent_message_timestamps = {}
 
-def get_random_message(group_id):
+async def get_random_message(group_id):
     try:
         messages = []
         async for message in app.iter_history(group_id=-1002014693954):
@@ -130,7 +130,7 @@ def get_random_message(group_id):
     except Exception as e:
         print(f"Error in get_random_message: {e}")
         return None
-
+        
 async def send_to_all_groups():
     try:
         group_ids = CLASS_11_STRING.split(', ')
