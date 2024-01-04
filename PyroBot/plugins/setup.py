@@ -124,12 +124,14 @@ async def start_sending_command(client, message):
 
 async def get_random_message(group_id):
     try:
+        print(f"get_random_message: Trying to retrieve random message for group_id {group_id}")
         messages = []
         async for message in app.iter_history(group_id):
             if message.text and message.message_id not in sent_message_ids:
                 messages.append(message)
         
         if messages:
+            print(f"get_random_message: Random message retrieved successfully for group_id {group_id}")
             random_message = random.choice(messages)
             sent_message_ids.add(random_message.message_id)
             sent_message_timestamps[random_message.message_id] = time.time()
