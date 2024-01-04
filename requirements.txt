@@ -6,3 +6,4 @@ aiohttp
 motor
 pymongo
 requests
+telegraph
