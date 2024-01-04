@@ -114,7 +114,7 @@ sent_message_ids = set()
 # Store the message IDs along with their respective timestamps
 sent_message_timestamps = {}
 
-start_sending = False
+start_sending = True
 
 @Client.on_message(filters.command('startsending') & filters.private)
 async def start_sending_command(client, message):
