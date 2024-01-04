@@ -114,10 +114,18 @@ sent_message_ids = set()
 # Store the message IDs along with their respective timestamps
 sent_message_timestamps = {}
 
+start_sending = False
+
+@Client.on_message(filters.command('startsending') & filters.private)
+async def start_sending_command(client, message):
+    global start_sending
+    start_sending = True
+    await message.reply_text('Started sending messages...')
+
 async def get_random_message(group_id):
     try:
         messages = []
-        async for message in app.iter_history(group_id=-1002014693954):
+        async for message in app.iter_history(group_id):
             if message.text and message.message_id not in sent_message_ids:
                 messages.append(message)
         
@@ -132,11 +140,14 @@ async def get_random_message(group_id):
         return None
         
 async def send_to_all_groups():
+    global start_sending
+    while not start_sending:
+        await asyncio.sleep(1)
+    
     try:
         group_ids = CLASS_11_STRING.split(', ')
         group_ids = list(map(int, group_ids))
 
-      
         for group_id in group_ids:
             try:
                 random_message = await get_random_message(int(group_id))
