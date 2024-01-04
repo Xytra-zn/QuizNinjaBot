@@ -1,6 +1,7 @@
 from telegraph import upload_file
 import pyrogram
 from pyrogram import filters, Client
+import os
 from pyrogram.types import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
